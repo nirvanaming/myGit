@@ -78,7 +78,7 @@ void MenuLayer::HelloWorldCallBack(CCObject* pSender)
 
 MenuLayer::MenuLayer()
 {   
-	//°´Å¥
+	//button
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 	CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
@@ -93,12 +93,11 @@ MenuLayer::MenuLayer()
     CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
     pMenu->setPosition(CCPointZero);
     this->addChild(pMenu, 1);
-	//±³¾°
+	//add background
 	CCSize size = CCDirector::sharedDirector()->getWinSize();
 	CCSprite* pSprite=CCSprite::create("Download/sunset.jpg");
 	pSprite->setPosition(ccp(size.width/2,size.height/2));
 	this->addChild(pSprite,0);
-	//×ÖÌå
 	CCLabelTTF* pLabel=CCLabelTTF::create("Please PUSH the lower right coner BUTTON to start the game","Arial",15);
 	pLabel->setColor(ccc3(100,100,100));
 	pLabel->setPosition(ccp(size.width/2,size.height/2+100));
@@ -126,6 +125,5 @@ void SettingScene::onEnter()
 void MenuLayer::HelloWorldCallBack(CCObject* pSender)
 {
 	CCScene* pScene=HelloWorld::scene();
-	//CCScene* pScene2=new SettingScene;
-	CCDirector::sharedDirector()->replaceScene(CCTransitionFlipAngular::create(2,pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionFlipAngular::create(1.0f,pScene));
 }

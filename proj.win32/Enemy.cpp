@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "GameOverScene.h"
 #include "Effect.h"
+#include "Config.h"
 
 using namespace cocos2d;
 
@@ -79,7 +80,9 @@ void Enemy::moveEnemy(float dt)
 			m_allEnemyArray->removeObjectAtIndex(i);
 			m_enemySprite->removeChild(nowEnemy,true);
 			GameOverScene* gameoverscene=GameOverScene::create();
-			gameoverscene->getlayer()->getlabel()->setString("YouLose :<");
+			char score[20];
+			sprintf(score,"%06d",Config::sharedConfig()->getScore());
+			gameoverscene->getlayer()->getlabel()->setString(score);
 			CCDirector::sharedDirector()->replaceScene(gameoverscene);
 		}
 	}

@@ -31,7 +31,7 @@ public:
 	//被击中
 	void Hurt();
 	//飞机生命
-	int shipHP;
+    //int shipHP;
 	//gameoverscene callback
 	void GOCallBack(CCNode* pSender);
 	

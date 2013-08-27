@@ -113,7 +113,7 @@ void DialogLayer::ccTouchCancelled(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *p
 
 void DialogLayer::okMenuItemCallback(cocos2d::CCObject *pSender)
 {
-    // 点击确定就退出（拷贝的原有方法）
+    // click OK to Exit(copy the old func)
     CCDirector::sharedDirector()->end();
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)

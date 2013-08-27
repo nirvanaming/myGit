@@ -79,6 +79,9 @@
     <ClInclude Include="Effect.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -112,6 +115,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

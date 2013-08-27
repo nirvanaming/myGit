@@ -8,13 +8,14 @@
 #include "Effect.h"
 #include "GameOverScene.h"
 #include "string.h"
+#include "Config.h"
 
 using namespace cocos2d;
 
 Ship* Ship::sharedShip=NULL;
 
-Ship::Ship():
-	shipHP(3)
+Ship::Ship()
+	//shipHP(3)
 {
 
 }
@@ -29,23 +30,22 @@ bool Ship::init()
 	bool sRet=false;
 	do{
 		CC_BREAK_IF(!CCLayer::init());
-		//加载飞机图片
+		//add ship png
 		CCSprite* sShip=CCSprite::create("Player.png",CCRectMake(47*2,0,47,56));
 		this->addChild(sShip,0,747);
-		/////////创建动画//////////////////////////////////
+		/////////create animation//////////////////////////////////
 		CCAnimation* animation=CCAnimation::create();
 		animation->setDelayPerUnit(0.1f);
-		//定义动画每一帧
+		//define every frame of animation
 		for(unsigned int i=0;i<4;i++)
 		{
 			animation->addSpriteFrame(
 				CCSpriteFrame::create("Player.png",CCRectMake(47*i,0,47,56)));
 
 		}
-		//创建动画
+		//create animation
 		CCAnimate* anim=CCAnimate::create(animation);
 		sShip->runAction(::cocos2d::CCRepeatForever::create(anim));
-		//////////////////////////////////
 		sShip->setPosition(ccp(50,160));
 		sShip->setRotation(90);
 
@@ -99,16 +99,11 @@ void Ship::moveTo(CCPoint p)
 
 void Ship::Hurt()
 {
-	shipHP--;
+	Config::sharedConfig()->setShipHP();
 	Effect* effect=Effect::create();
 	effect->explode(this->getParent(),this->getChildByTag(747)->getPosition());
-	//GameOverScene* gameoverscene=GameOverScene::create();
-	//gameoverscene->getlayer()->getlabel()->setString("YouLose :<");
-	//CCDirector::sharedDirector()->replaceScene(gameoverscene);
-	//this->removeFromParent();
 	
-
-	if(shipHP<=0)
+	if(Config::sharedConfig()->shipHP<=0)
 	{
         CCCallFuncN *goCallBack = CCCallFuncN::create(this, callfuncN_selector(Ship::GOCallBack));
         this->runAction(CCSequence::create(CCDelayTime::create(0.5), goCallBack, NULL));

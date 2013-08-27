@@ -1,6 +1,7 @@
 #include "GameOverScene.h"
 #include "HelloWorldScene.h"
 #include "Menu.h"
+#include "Config.h"
 
 using namespace cocos2d;
 
@@ -31,6 +32,9 @@ GameOverScene::~GameOverScene()
 
 bool GameOverLayer::init()
 {
+	bool bRect=false;
+
+	do{
 	if(CCLayerColor::initWithColor(ccc4(255,255,255,255)))
 	{
 		CCSize winSize=CCDirector::sharedDirector()->getWinSize();
@@ -41,18 +45,26 @@ bool GameOverLayer::init()
         pSprite->setPosition(ccp(winSize.width/2, winSize.height/2));
         this->addChild(pSprite, 0);
 
-		this->_label=CCLabelTTF::create("","Broadway",32);
+		this->_label=CCLabelTTF::create("","FZCuYuan-M03",35);
 		_label->retain();
 		_label->setColor(ccc3(200,200,200));
 		_label->setPosition(ccp(winSize.width/2,winSize.height/2));
 		this->addChild(_label);
 
-		CCLabelTTF *pLabel=CCLabelTTF::create("Please press 'confirm' to play again!","Aharoni",20);
+		//add your score label
+		CCLabelTTF*  scoreLabel=CCLabelTTF::create("Your score is: ","FZCuYuan-M03",20);
+		//scoreLabel->setAnchorPoint(ccp(0,0));
+		scoreLabel->setColor(ccc3(150,150,150));
+		scoreLabel->setPosition(ccp(winSize.width/2,winSize.height/2+30));
+		this->addChild(scoreLabel);
+
+		//add confirm label
+		CCLabelTTF* pLabel=CCLabelTTF::create("Please press 'confirm' to play again!","Aharoni",20);
 		pLabel->setPosition(ccp(winSize.width/2,winSize.height/2-30));
 		pLabel->setColor(ccc3(150,150,150));
 		this->addChild(pLabel);
 
-		//****************************************Ìí¼ÓµÄplay again°´Å¥
+		//****************************************add "play again" button
 
 		   CCMenuItemImage *pPlayAgainItem = CCMenuItemImage::create(
             "Download/Confirm1.png",
@@ -60,32 +72,17 @@ bool GameOverLayer::init()
             this,
 			menu_selector(GameOverLayer::PlayScreenCallBack));
       //  CC_BREAK_IF(! pCloseItem);
-
-        // Place the menu item bottom-right conner.
         pPlayAgainItem->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width - 100, 40));
-
-        // Create a menu with the "close" menu item, it's an auto release object.
         CCMenu* pMenu = CCMenu::create(pPlayAgainItem, NULL);
         pMenu->setPosition(CCPointZero);
-      //  CC_BREAK_IF(! pMenu);
-
-        // Add the menu to HelloWorld layer as a child layer.
+        //CC_BREAK_IF(! pMenu);
         this->addChild(pMenu, 1);
+	}
+	bRect= true;
+	}while(0);
 
-		//***************************************
-		/*
-		this->runAction(CCSequence::create(
-			CCDelayTime::create(3),
-			CCCallFunc::create(this,
-			callfunc_selector(GameOverLayer::gameOverDone)),
-			NULL));
-			*/
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+
+	return bRect;
 }
 
 void GameOverLayer::gameOverDone()
@@ -96,9 +93,8 @@ void GameOverLayer::gameOverDone()
 void GameOverLayer::PlayScreenCallBack(CCObject *pSender)
 {
 	CCScene* pScene=HelloWorld::scene();
-	//CCScene* pScene2=new SettingScene;
-	//CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(2,pScene));
 	CCDirector::sharedDirector()->replaceScene(pScene);
+	Config::sharedConfig()->resetConfig();
 
 }
 
