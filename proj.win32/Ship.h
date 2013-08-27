@@ -11,31 +11,30 @@
 USING_NS_CC;
 
 
-class Ship:public CCSprite
+class Ship:public CCLayer
 {
-
-private:
-	int m_bulletSpeed;//子弹速度
-	
-	CCPoint m_appearPosition; //子弹出现位置
-
-	//CCArray* m_allBulletsArray; //保存所有已存在的子弹对象
 
 public:
 	Ship();
 	~Ship();
-	//更新
-	virtual void update(float dt);
-	//发射子弹
-	void shoot(float dt);
+public:
+	
+	static Ship* sharedShip;
 	//初始化
 	virtual bool init();
-	//销毁飞船
-	virtual void destroy();
+	//创建飞机对象
+	static Ship* create();
 	//碰撞矩形
 	virtual CCRect shipRect();
-	//构造器
-	CREATE_FUNC(Ship);
+	//移动飞机
+	void moveTo(CCPoint p);
+	//被击中
+	void Hurt();
+	//飞机生命
+	int shipHP;
+	//gameoverscene callback
+	void GOCallBack(CCNode* pSender);
+	
 
 };
 #endif // !_SHIP_H_

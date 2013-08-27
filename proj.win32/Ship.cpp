@@ -5,11 +5,16 @@
 //
 
 #include "Ship.h"
-#include "Bullet.h"
+#include "Effect.h"
+#include "GameOverScene.h"
+#include "string.h"
 
 using namespace cocos2d;
 
-Ship::Ship():m_bulletSpeed(800),m_appearPosition(CCPointZero)
+Ship* Ship::sharedShip=NULL;
+
+Ship::Ship():
+	shipHP(3)
 {
 
 }
@@ -21,52 +26,100 @@ Ship::~Ship()
 
 bool Ship::init()
 {
-	if(!CCSprite::init())
+	bool sRet=false;
+	do{
+		CC_BREAK_IF(!CCLayer::init());
+		//加载飞机图片
+		CCSprite* sShip=CCSprite::create("Player.png",CCRectMake(47*2,0,47,56));
+		this->addChild(sShip,0,747);
+		/////////创建动画//////////////////////////////////
+		CCAnimation* animation=CCAnimation::create();
+		animation->setDelayPerUnit(0.1f);
+		//定义动画每一帧
+		for(unsigned int i=0;i<4;i++)
+		{
+			animation->addSpriteFrame(
+				CCSpriteFrame::create("Player.png",CCRectMake(47*i,0,47,56)));
+
+		}
+		//创建动画
+		CCAnimate* anim=CCAnimate::create(animation);
+		sShip->runAction(::cocos2d::CCRepeatForever::create(anim));
+		//////////////////////////////////
+		sShip->setPosition(ccp(50,160));
+		sShip->setRotation(90);
+
+		
+
+
+		sRet=true;
+	}while(0);
+	return sRet;
+}
+
+Ship *Ship::create()
+{
+	Ship *pRet=new Ship();
+	if(pRet&&pRet->init())
 	{
-		return false;
+		pRet->autorelease();
+		sharedShip=pRet;
+		return pRet;
 	}
 
-	CCSprite* ship=CCSprite::create("Download/SkyWard.png", CCRectMake(0,0,100,60));
-	this->addChild(ship);
-	this->setPosition(m_appearPosition);
-
-	//子弹发射
-	this->schedule(schedule_selector(Ship::shoot),0.16f);
-
-	return true;
+	else
+	{
+		CC_SAFE_DELETE(pRet);
+		return NULL;
+	}
 }
 
-
-void Ship::update(float dt)
-{
-}
-
-
-void Ship::shoot(float dt)
-{
-	//构建一个子弹，添加到BatchNode中。  
-	Bullet* bullet_a=Bullet::create();
-	CCSprite* newBullet = CCSprite::createWithTexture(bullet_a->m_bulletSprite->getTexture());  
-    newBullet->setPosition(CCPointZero);  
-    bullet_a->m_bulletSprite->addChild(newBullet);  
-      
-    //添加子弹到已存在子弹数组  
-    bullet_a->m_allBulletArray->addObject(newBullet);  
-}
-
-void Ship::destroy()
-{
-	CCLOG("destroy one ship");
-	this->removeFromParent();
-}
 
 CCRect Ship::shipRect()
 {
-	CCPoint pos=getPosition();
-	CCSize cs=getContentSize();
-
-	return CCRectMake(pos.x-cs.width/2,pos.y-cs.height/2,
-		cs.width,cs.height/2);
+	return CCRectMake(
+		          	this->getChildByTag(747)->getPosition().x-(this->getChildByTag(747)->getContentSize().width/2),
+		          	this->getChildByTag(747)->getPosition().y-(this->getChildByTag(747)->getContentSize().height/2),
+			        this->getChildByTag(747)->getContentSize().width,
+		          	this->getChildByTag(747)->getContentSize().height);
 }
 
 
+
+void Ship::moveTo(CCPoint p)
+{
+	CCSize winSize=CCDirector::sharedDirector()->getWinSize();
+    CCRect winRect=CCRectMake(0,0,winSize.width,winSize.height);
+	if(winRect.containsPoint(p)){
+	this->getChildByTag(747)->setPosition(p);
+	}
+}
+
+
+
+void Ship::Hurt()
+{
+	shipHP--;
+	Effect* effect=Effect::create();
+	effect->explode(this->getParent(),this->getChildByTag(747)->getPosition());
+	//GameOverScene* gameoverscene=GameOverScene::create();
+	//gameoverscene->getlayer()->getlabel()->setString("YouLose :<");
+	//CCDirector::sharedDirector()->replaceScene(gameoverscene);
+	//this->removeFromParent();
+	
+
+	if(shipHP<=0)
+	{
+        CCCallFuncN *goCallBack = CCCallFuncN::create(this, callfuncN_selector(Ship::GOCallBack));
+        this->runAction(CCSequence::create(CCDelayTime::create(0.5), goCallBack, NULL));
+	}
+}
+
+
+void Ship::GOCallBack(CCNode* pSender)
+{
+	GameOverScene* gameoverscene=GameOverScene::create();
+	    gameoverscene->getlayer()->getlabel()->setString("YouLose :<");
+	    CCDirector::sharedDirector()->replaceScene(gameoverscene);
+
+}

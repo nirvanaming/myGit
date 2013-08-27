@@ -73,6 +73,12 @@
     <ClInclude Include="Ship.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -100,6 +106,12 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="Ship.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

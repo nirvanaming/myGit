@@ -139,6 +139,8 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="DialogLayer.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Menu.h" />
@@ -151,6 +153,8 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DialogLayer.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
