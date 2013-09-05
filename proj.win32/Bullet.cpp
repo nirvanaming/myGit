@@ -46,8 +46,7 @@ bool Bullet::init()
 	}while(0);
 
 	return sRet;
-	
-    return true;
+
 }
 
 
