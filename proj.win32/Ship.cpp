@@ -10,6 +10,7 @@
 #include "string.h"
 #include "Config.h"
 
+
 using namespace cocos2d;
 
 Ship* Ship::sharedShip=NULL;
@@ -49,9 +50,6 @@ bool Ship::init()
 		sShip->setPosition(ccp(50,160));
 		sShip->setRotation(90);
 
-		
-
-
 		sRet=true;
 	}while(0);
 	return sRet;
@@ -80,8 +78,8 @@ CCRect Ship::shipRect()
 	return CCRectMake(
 		          	this->getChildByTag(747)->getPosition().x-(this->getChildByTag(747)->getContentSize().width/2),
 		          	this->getChildByTag(747)->getPosition().y-(this->getChildByTag(747)->getContentSize().height/2),
-			        this->getChildByTag(747)->getContentSize().width,
-		          	this->getChildByTag(747)->getContentSize().height);
+			        40,
+		          	40);
 }
 
 
@@ -102,11 +100,10 @@ void Ship::Hurt()
 	Config::sharedConfig()->setShipHP();
 	Effect* effect=Effect::create();
 	effect->explode(this->getParent(),this->getChildByTag(747)->getPosition());
-	
 	if(Config::sharedConfig()->shipHP<=0)
 	{
         CCCallFuncN *goCallBack = CCCallFuncN::create(this, callfuncN_selector(Ship::GOCallBack));
-        this->runAction(CCSequence::create(CCDelayTime::create(0.5), goCallBack, NULL));
+        this->runAction(CCSequence::create(CCDelayTime::create(0.3f), goCallBack, NULL));
 	}
 }
 
@@ -114,7 +111,9 @@ void Ship::Hurt()
 void Ship::GOCallBack(CCNode* pSender)
 {
 	GameOverScene* gameoverscene=GameOverScene::create();
-	    gameoverscene->getlayer()->getlabel()->setString("YouLose :<");
-	    CCDirector::sharedDirector()->replaceScene(gameoverscene);
+	char score[20];
+	sprintf(score,"%06d",Config::sharedConfig()->getScore());
+	gameoverscene->getlayer()->getlabel()->setString(score);
+	CCDirector::sharedDirector()->replaceScene(gameoverscene);
 
 }

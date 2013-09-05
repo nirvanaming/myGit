@@ -20,17 +20,17 @@ public:
 public:
 	
 	static Ship* sharedShip;
-	//初始化
+	//init
 	virtual bool init();
-	//创建飞机对象
+	//create ship
 	static Ship* create();
-	//碰撞矩形
+	//rect
 	virtual CCRect shipRect();
-	//移动飞机
+	//move ship
 	void moveTo(CCPoint p);
-	//被击中
+	//is hurt
 	void Hurt();
-	//飞机生命
+	//ship hp
     //int shipHP;
 	//gameoverscene callback
 	void GOCallBack(CCNode* pSender);

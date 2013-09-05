@@ -9,6 +9,10 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
+extern CCArray *m_allPlayerBulletArray;
+extern CCArray *m_allEnemyBulletArray;
+extern CCArray *m_allEnemyArray;
+
 class Config :
 	public CCObject
 {

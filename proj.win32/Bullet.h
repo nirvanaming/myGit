@@ -20,14 +20,17 @@ public:
 	~Bullet();
 
 public:
-	CCSpriteBatchNode* m_bulletSprite;//使用BatchNode构建所有的子弹，减少gl绘画次数 
-	CCArray* m_allBulletArray;//保存所有已存在的子弹对象
+	CCSpriteBatchNode* m_bulletSprite;//using BatchNode to create bullet，reduce the GL create times 
+	//CCArray* m_allBulletArray;//save all the bullets array
+	CCSpriteBatchNode* m_enemyBulletSprite;
 
 	
-	virtual bool init(); //初始化
-	//virtual CCRect bulletRect(); //碰撞矩形
-	void addNewBullet(float dt);  //添加子弹
-	void moveBullet(float dt);   //移动子弹
+	virtual bool init(); //init
+	//virtual CCRect bulletRect(); //collide rect
+	void addNewShipBullet(float dt);  //add bullets
+	void addNewEnemyBullet(float dt);
+	void moveShipBullet(float dt);   //move bullets
+	void moveEnemyBullet(float dt);
 	
 
 	CREATE_FUNC(Bullet);

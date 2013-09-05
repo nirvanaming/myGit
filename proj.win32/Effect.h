@@ -1,3 +1,8 @@
+//
+//Effect.h
+//
+//created by Tim on Aug 25th 2013
+//
 #ifndef _EFFECT_H_
 #define _EFFECT_H_
 

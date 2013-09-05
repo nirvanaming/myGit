@@ -27,15 +27,6 @@
     <Image Include="res\HelloWord.ico">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="..\..\..\cocos2d-2.1rc0-x-2.1.2-hotfix\cocos2d-2.1rc0-x-2.1.2\Debug.win32\Target.png">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="..\..\..\cocos2d-2.1rc0-x-2.1.2-hotfix\cocos2d-2.1rc0-x-2.1.2\Debug.win32\Player.png">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="..\..\..\cocos2d-2.1rc0-x-2.1.2-hotfix\cocos2d-2.1rc0-x-2.1.2\Debug.win32\Projectile.png">
-      <Filter>resource</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HelloWord.rc">

@@ -1,6 +1,15 @@
+//
+//Config.cpp
+//
+//created by Tim on Aug 27th 2013
+//
 #include "Config.h"
 
 using namespace cocos2d;
+
+CCArray *m_allPlayerBulletArray;
+CCArray *m_allEnemyBulletArray;
+CCArray *m_allEnemyArray;
 
 static  Config *g_config = NULL;
 
@@ -13,6 +22,12 @@ Config::Config(void):
 
 Config::~Config(void)
 {
+	m_allPlayerBulletArray->release();
+	m_allEnemyBulletArray->release();
+	m_allEnemyArray->release();
+	m_allPlayerBulletArray=NULL;
+	m_allEnemyBulletArray=NULL;
+	m_allEnemyArray=NULL;
 }
 
 

@@ -1,3 +1,8 @@
+//
+//Effect.cpp
+//
+//created by Tim on Aug 25th 2013
+//
 #include "Effect.h"
 using namespace cocos2d;
 
@@ -29,10 +34,9 @@ Effect* Effect::create()
 void Effect::explode(CCNode *parent, CCPoint pos)
 {
     	
-		CCSprite* m_boom=CCSprite::create("Download/boom/boom00.png");
+		CCSprite* m_boom=CCSprite::create();
 		       m_boom->retain();
-				//在这里增加爆炸动画效果，add action
-				//定义动画效果：
+				//add explode effect, define explode effect：
 			m_boom->setPosition(pos);
 			parent->addChild(m_boom);
 			 CCAnimation* animation = CCAnimation::create();
@@ -50,6 +54,7 @@ void Effect::explode(CCNode *parent, CCPoint pos)
 			  callfuncN_selector(Effect::killSprite)),
 			  NULL);
 		  m_boom->runAction(action);
+		  
     
 }
 

@@ -45,12 +45,16 @@ bool GameOverLayer::init()
         pSprite->setPosition(ccp(winSize.width/2, winSize.height/2));
         this->addChild(pSprite, 0);
 
-		this->_label=CCLabelTTF::create("","FZCuYuan-M03",35);
+		this->_label=CCLabelTTF::create("","FZCuYuan-M03",40);
 		_label->retain();
 		_label->setColor(ccc3(200,200,200));
 		_label->setPosition(ccp(winSize.width/2,winSize.height/2));
 		this->addChild(_label);
-
+		
+		CCLabelTTF* gameoverlabel=CCLabelTTF::create("Game Over","Aharoni",40);
+		gameoverlabel->setColor(ccc3(150,150,150));
+		gameoverlabel->setPosition(ccp(winSize.width/2,winSize.height/2+50));
+		this->addChild(gameoverlabel);
 		//add your score label
 		CCLabelTTF*  scoreLabel=CCLabelTTF::create("Your score is: ","FZCuYuan-M03",20);
 		//scoreLabel->setAnchorPoint(ccp(0,0));
