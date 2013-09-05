@@ -36,7 +36,7 @@ bool Bullet::init()
 	    this->addChild(m_enemyBulletSprite);
 
 		//add 1 bullet every dt
-		this->schedule(schedule_selector(Bullet::addNewShipBullet),0.3f);
+		this->schedule(schedule_selector(Bullet::addNewShipBullet),0.2f);
 		//move bullet every dt
 		this->schedule(schedule_selector(Bullet::moveShipBullet),0.01f);
 		this->schedule(schedule_selector(Bullet::addNewEnemyBullet),0.6f);
