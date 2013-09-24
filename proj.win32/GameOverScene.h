@@ -18,6 +18,8 @@ public:
 
 	void PlayScreenCallBack(CCObject *pSender);
 
+	cocos2d::CCLabelTTF* highScoreLabel;
+
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*,_label,label);
 };
 
@@ -27,6 +29,7 @@ public:
 	GameOverScene():_layer(NULL){};
 	~GameOverScene();
 	bool init();
+	
 	CREATE_FUNC(GameOverScene);
 
 	CC_SYNTHESIZE_READONLY(GameOverLayer*,_layer,layer);

@@ -4,16 +4,17 @@
 //created by Tim on Aug 8th 2013
 //
 #include "HelloWorldScene.h"
-#include "SimpleAudioEngine.h"
+//#include "SimpleAudioEngine.h"
 #include "GameOverScene.h"
 #include "Menu.h"
 #include "DialogLayer.h"
 #include "PauseLayer.h"
-#include "Bullet.h"
 #include "Ship.h"
 #include "Enemy.h"
 #include "Effect.h"
 #include "Config.h"
+#include "BigBullet.h"
+#include "Unit.h"
 
 
 using namespace std;
@@ -24,13 +25,18 @@ HelloWorld::HelloWorld()
 	:pSpriteWidth(0)
 	,m_ispSpriteReload(false)
 	,mIsTouching(false)
-  //  ,Score(0)
     ,m_scoreLabel(NULL)
     ,m_lifeCountLabel(NULL){}
 
 HelloWorld::~HelloWorld()
 {
-	
+	if(m_EnemyActionMag)
+	{
+		delete m_EnemyActionMag;
+	}
+	m_allBigBulletArray->release();
+	m_allEnemyBulletArray->release();
+	m_allEnemyArray->release();
 }
 
 CCScene* HelloWorld::scene()
@@ -50,57 +56,54 @@ CCScene* HelloWorld::scene()
         scene->addChild(layer);
     } while (0);
 
-    // return the scene
     return scene;
 }
 
 
-// on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
     bool bRet = false;
     do 
     {
-        //////////////////////////////////////////////////////////////////////////
-        // super init first
-        //////////////////////////////////////////////////////////////////////////
-
         CC_BREAK_IF(! CCLayer::init());
+		m_allBigBulletArray=CCArray::create();
+        m_allBigBulletArray->retain();
 
-        //////////////////////////////////////////////////////////////////////////
-        // add your codes below...
-        //////////////////////////////////////////////////////////////////////////
+		m_allEnemyArray=CCArray::create();
+		m_allEnemyArray->retain();
 
-        // 1. Add a menu item with "X" image, which is clicked to quit the program.
-        // Create a "close" menu item with close icon, it's an auto release object.
+		m_allEnemyBulletArray=CCArray::create();
+		m_allEnemyBulletArray->retain();
+
         CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
             "CloseNormal.png",
             "CloseSelected.png",
             this,
             menu_selector(HelloWorld::menuCloseCallback));
         CC_BREAK_IF(! pCloseItem);
-
-        // Place the menu item bottom-right conner.
         pCloseItem->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width - 20, 20));
-        // Create a menu with the "close" menu item, it's an auto release object.
+     
         CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
         pMenu->setPosition(CCPointZero);
         CC_BREAK_IF(! pMenu);
-        // Add the menu to HelloWorld layer as a child layer.
         this->addChild(pMenu, 1);
 
 		CCSize size = CCDirector::sharedDirector()->getWinSize();
+		m_screenRect=CCRectMake(0,0,size.width+30,size.height);
+
+		//*********************************************************************************
+		Enemy::sharedEnemy();
+		m_EnemyActionMag=new EnemyActionMag(this);
 
 		//add pause button£º*******************************************************/
 		CCMenuItemImage* pauseBtn=CCMenuItemImage::create
 			("Download/Pause.png","Download/Pause.png",NULL,
 			this,menu_selector(HelloWorld::pauseLayerCallback));
 
-		//pauseBtn->setAnchorPoint(ccp(1,1));
 		CCMenu* menu=CCMenu::create(pauseBtn,NULL);
 		menu->setPosition(ccp(size.width-50,size.height-50));
 		menu->setTag(10);           //set a tag, using to hide
-		this->addChild(menu,1);
+		this->addChild(menu,100);
 
         // 3. Add a splash screen, show the cocos2d splash image.
         pSprite = CCSprite::create("Download/BackSky.png");
@@ -114,15 +117,9 @@ bool HelloWorld::init()
 		pSprite->runAction(CCMoveBy::create(3,ccp(-240,0)));
 		this->schedule(schedule_selector(HelloWorld::movingBackground),3);
 	    //add ship
-		this->m_ship=Ship::create();
-		this->addChild(m_ship);
-	    //add bullets
-		this->m_bullet=Bullet::create();
-		this->addChild(m_bullet);
-		//add enemy
-		this->m_enemy=Enemy::create();
-		this->addChild(m_enemy);
-
+		this->m_ship=Ship::create("ship01.png");
+		this->addChild(m_ship,1,999);
+	  
 		//score label
 		char score[20];
         char s[30] = "score:";
@@ -145,30 +142,23 @@ bool HelloWorld::init()
 		this->addChild(m_lifeCountLabel,1);
 		
 		CCSpriteBatchNode* icon=CCSpriteBatchNode::create("Download/icon.png");
-		shipIcon1=CCSprite::createWithTexture(icon->getTexture());
+		CCSprite* shipIcon1=CCSprite::createWithTexture(icon->getTexture());
 		shipIcon1->setPosition(ccp(m_lifeCountLabel->getPosition().x+65,m_lifeCountLabel->getPosition().y+12));
-		icon->addChild(shipIcon1);
-
-		shipIcon2=CCSprite::createWithTexture(icon->getTexture());
+		icon->addChild(shipIcon1,1,101);
+		CCSprite* shipIcon2=CCSprite::createWithTexture(icon->getTexture());
 		shipIcon2->setPosition(ccp(m_lifeCountLabel->getPosition().x+80,m_lifeCountLabel->getPosition().y+12));
-		icon->addChild(shipIcon2);
-
-		shipIcon3=CCSprite::createWithTexture(icon->getTexture());
+		icon->addChild(shipIcon2,1,102);
+		CCSprite* shipIcon3=CCSprite::createWithTexture(icon->getTexture());
 		shipIcon3->setPosition(ccp(m_lifeCountLabel->getPosition().x+95,m_lifeCountLabel->getPosition().y+12));
-		icon->addChild(shipIcon3);
+		icon->addChild(shipIcon3,1,103);
+		addChild(icon,4,100);
 
-		addChild(icon,4);
-
-
-
-
-
-		//call back func
-		this->schedule(schedule_selector(HelloWorld::isCollide));
-		this->schedule(schedule_selector(HelloWorld::updateUI),0.1f);
+		scheduleUpdate();
+		schedule(schedule_selector(HelloWorld::scoreCounter), 1.0f);
+		
+		//this->schedule(schedule_selector(HelloWorld::addEnemy),0.7f);
 	
 		setTouchEnabled(true);
-
 
 		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(
 		//	"background-music-aac.wav",true);
@@ -180,75 +170,128 @@ bool HelloWorld::init()
 
 
 
-void HelloWorld::isCollide(float dt)
+void HelloWorld::isCollide()
 {
-	for(unsigned int i=0;i<m_allEnemyBulletArray->count();i++)
+	
+	CCObject* enemys;
+	CCObject* shipBullets;
+	CCObject* enemyBullets;
+	
+	CCARRAY_FOREACH(m_allEnemyArray,enemys)
 	{
-		CCSprite* nowEnemyBullet=(CCSprite*)m_allEnemyBulletArray->objectAtIndex(i);
-		CCRect enemyBulletRect=CCRectMake(
-			    nowEnemyBullet->getPosition().x-(nowEnemyBullet->getContentSize().width/2),
-				nowEnemyBullet->getPosition().y-(nowEnemyBullet->getContentSize().height/2),
-				nowEnemyBullet->getContentSize().width/2,
-				nowEnemyBullet->getContentSize().height/2);
-
-		if(enemyBulletRect.intersectsRect(m_ship->shipRect()))           //enemy bullet hit ship
+		Unit* enemy=dynamic_cast<Unit*>(enemys);
+		Unit* ship=dynamic_cast<Unit*>(m_ship);
+		
+		CCARRAY_FOREACH(m_allBigBulletArray,shipBullets)
 		{
-			m_ship->Hurt();
-			m_allEnemyBulletArray->removeObject(nowEnemyBullet);
-			nowEnemyBullet->removeFromParent();
-		}
-
-
-
-	}
-
-	for(unsigned int i=0;i<m_allEnemyArray->count();i++)  //all enemies in screen
-	{
-		CCSprite* nowEnemy=(CCSprite*)m_allEnemyArray->objectAtIndex(i);
-		   
-		CCRect nowEnemyRect=CCRectMake(
-				nowEnemy->getPosition().x-(nowEnemy->getContentSize().width/2),
-				nowEnemy->getPosition().y-(nowEnemy->getContentSize().height/2),
-				nowEnemy->getContentSize().width/2-10,
-				nowEnemy->getContentSize().height/2-10);
-
-		 if(nowEnemyRect.intersectsRect(m_ship->shipRect()))
+			Unit* bullet=dynamic_cast<Unit*>(shipBullets);
+			if(this->collide(enemy,bullet))
 			{
-				m_ship->Hurt();
-				m_allEnemyArray->removeObject(nowEnemy);
-				nowEnemy->removeFromParent();
-				Config::sharedConfig()->setScore(100);
-
+				enemy->hurt();
+				bullet->hurt();
 			}
-
-		for(unsigned int i=0;i<m_allPlayerBulletArray->count();i++)  //all bullets in screen
+			if(!(m_screenRect.intersectsRect(bullet->boundingBox())))
+			{
+				m_allBigBulletArray->removeObject(bullet);
+				bullet->removeFromParent();
+				//bullet->destroy();
+			}
+		}
+		if(collide(enemy,m_ship))
 		{
-			CCSprite* nowBullet=(CCSprite*)m_allPlayerBulletArray->objectAtIndex(i);
-			CCRect nowBulletRect=CCRectMake(
-		           	nowBullet->getPosition().x-(nowBullet->getContentSize().width/2),
-		           	nowBullet->getPosition().y-(nowBullet->getContentSize().height/2),
-			        nowBullet->getContentSize().width/2,
-		          	nowBullet->getContentSize().height/2);
-
-			if(nowEnemyRect.intersectsRect(nowBulletRect)&&!(nowEnemyRect.intersectsRect(m_ship->shipRect())))  //any bullets collide any enemy
-			{    
-				//load effect
-		        Effect* effect=Effect::create();
-				effect->explode(this,nowEnemy->getPosition());
-				m_allEnemyArray->removeObject(nowEnemy);
-				nowEnemy->removeFromParent();
-				m_allPlayerBulletArray->removeObject(nowBullet);
-				nowBullet->removeFromParent();
-				Config::sharedConfig()->setScore(100);
+			if(m_ship->isActive())
+			{
+				enemy->hurt();
+				m_ship->hurt();
 			}
-			
+	     }
+		if(!(m_screenRect.intersectsRect(enemy->boundingBox())))
+		{
+			m_allEnemyArray->removeObject(enemy);
+			enemy->removeFromParent();
+			//enemy->destroy();
 		}
 	}
+
+	CCARRAY_FOREACH(m_allEnemyBulletArray,enemyBullets)
+	{
+		Unit* enemyB=dynamic_cast<Unit*>(enemyBullets);
+		if(enemyB)		{
+			if(collide(enemyB,m_ship))
+			{
+				if(m_ship->isActive())
+			  {
+				enemyB->hurt();
+				m_ship->hurt();
+			  }
+			}
+			if(!m_screenRect.intersectsRect(enemyB->boundingBox()))
+			{
+				m_allEnemyBulletArray->removeObject(enemyB);
+				enemyB->removeFromParent();
+				//enemyB->destroy();
+			}
+		}
+	}	
+}
+
+bool HelloWorld::collide(Unit* a, Unit* b)
+{
+	if(!a||!b)
+	{
+		return false;
+	}
+	CCRect aRect=a->Rect();
+	CCRect bRect=b->Rect();
+	if(aRect.intersectsRect(bRect))
+	{
+		return true;
+	}
+	return false;
+}
+
+
+void HelloWorld::update(float dt)
+{
+	isCollide();
+	updateUI();
+	checkReborn();
+	removeInactiveUnit(dt);
 }
 
 
 
+void HelloWorld::removeInactiveUnit(float dt)
+{
+	
+	CCArray* children=this->getChildren();
+	for(unsigned int i=0; i<children->count();i++)
+	{
+		CCSprite* child=dynamic_cast<CCSprite*>(children->objectAtIndex(i));
+		if(child)
+		{
+			child->update(dt);
+			int tag=child->getTag();
+			if(tag==777||tag==888||tag==666)   //shipbullet:777, enemy:888, ship:999,enemybullet:666
+			{
+				if(!((Unit*)child)->isActive())
+			   {
+				((Unit*)child)->destroy();
+			   }
+			}
 
+        }
+	}
+	if(m_ship)
+	{
+		if(!m_ship->isActive())
+		{
+			m_ship->destroy();
+			m_ship=NULL;
+		}	
+	}
+}
+ 
 	
 //close Layer call back
 void HelloWorld::menuCloseCallback(CCObject* pSender)
@@ -302,7 +345,7 @@ void HelloWorld::movingBackground(float dt)
 
 
 //update score and hp
-void HelloWorld::updateUI(float dt)
+void HelloWorld::updateUI()
 {
 	char score[20];
     char s[30] = "score:";
@@ -319,17 +362,68 @@ void HelloWorld::updateUI(float dt)
 	case 3:
 		break;
 	case 2:
-		this->shipIcon3->setVisible(false);
+		this->getChildByTag(100)->getChildByTag(103)->setVisible(false);
 		break;
 	case 1:
-		this->shipIcon2->setVisible(false);
+		this->getChildByTag(100)->getChildByTag(102)->setVisible(false);
 		break;
 	case 0:
-		this->shipIcon1->setVisible(false);
+		this->getChildByTag(100)->getChildByTag(101)->setVisible(false);
 		break;
 	}
 }
 
+/*
+void HelloWorld::addEnemy(float dt)
+{
+	
+	Enemy* spriteEnemy=Enemy::create("Download/HexPilot.png",1);
+	spriteEnemy->setRotation(180);
+	spriteEnemy->setScale(0.7f);
+	CCSize winSize=CCDirector::sharedDirector()->getWinSize();
+	int minY=spriteEnemy->getContentSize().height/2;
+	int maxY=winSize.height-spriteEnemy->getContentSize().height/2;
+	int rangeY=maxY-minY;
+	int actualY=(rand()%rangeY)+minY;
+	spriteEnemy->setPosition(ccp(winSize.width+(spriteEnemy->getContentSize().width/2),actualY));
+	this->addChild(spriteEnemy,1,888);
+	spriteEnemy->move();
+    m_allEnemyArray->addObject(spriteEnemy);
+
+}
+*/
+
+void HelloWorld::checkReborn()
+{
+	
+	if(Config::sharedConfig()->getShipHP()>0)
+	{
+		if(!m_ship)
+		{
+			m_ship=Ship::create("ship01.png");
+			this->addChild(m_ship,2,999);
+		}
+	}
+    else if(Config::sharedConfig()->getShipHP()<=0)
+		{
+			m_ship=NULL;
+			CCCallFuncN *goCallBack = CCCallFuncN::create(this, callfuncN_selector(Ship::GOCallBack));
+             this->runAction(CCSequence::create(CCDelayTime::create(0.5f), goCallBack, NULL));
+
+		}
+}
+
+Ship* HelloWorld::getShip()
+{
+	return m_ship;
+}
+
+
+void HelloWorld::scoreCounter(float dt)
+{
+	m_time++;
+	m_EnemyActionMag->loadResource(m_time);
+}
 
 void HelloWorld::onEnter()
 {
@@ -348,6 +442,7 @@ void HelloWorld::onExit()
 bool HelloWorld::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
 {
 	mTouchPos=CCDirector::sharedDirector()->convertToGL(pTouch->getLocationInView());
+	if(m_ship)
 	mIsTouching=true;
 
 	return true;
@@ -355,10 +450,10 @@ bool HelloWorld::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent
 
 void HelloWorld::ccTouchMoved(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent)
 {
-	if(mIsTouching){
+	if(mIsTouching && m_ship){
 		CCPoint touchPos=CCDirector::sharedDirector()->convertToGL(pTouch->getLocationInView());
 		CCPoint moveDelta=ccpSub(touchPos,mTouchPos);
-		CCPoint nextPos=ccpAdd(m_ship->getChildByTag(747)->getPosition(),moveDelta);
+		CCPoint nextPos=ccpAdd(m_ship->getPosition(),moveDelta);
 
 		CCSize winSize=CCDirector::sharedDirector()->getWinSize();
 		CCRect winRect=CCRectMake(0,0,winSize.width,winSize.height);

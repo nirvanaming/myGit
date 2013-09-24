@@ -9,9 +9,9 @@
 
 #include "cocos2d.h"
 #include "Ship.h"
-#include "Bullet.h"
 #include "Enemy.h"
-
+#include "Unit.h"
+#include "EnemyActionMag.h"
 class HelloWorld : public cocos2d::CCLayer
 {
 
@@ -24,13 +24,11 @@ public:
 	cocos2d::CCSprite *m_pSpriteRe;  //link background
 	float pSpriteWidth;
 
-    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();  
 
 	
 	bool m_ispSpriteReload;
 
-    // there's no 'id' in cpp, so we recommand to return the exactly class pointer
     static cocos2d::CCScene* scene();
 
     // a selector callback
@@ -38,17 +36,24 @@ public:
 
 	void pauseLayerCallback(CCObject* pSender);
 
-	//void gameLogic(float dt);
-
-	//void spriteMoveFinished(CCNode* sender);
-
-	void isCollide(float dt);
+	void isCollide();
 
 	void movingBackground(float dt);
 
 	//void removeBoomCallback(CCNode* sender);
-	void updateUI(float dt);
+	void updateUI();
 
+	//void addEnemy(float dt);
+
+	bool collide(Unit*a, Unit* b);
+
+	virtual void update(float dt);
+
+	virtual void removeInactiveUnit(float dt);
+	virtual void checkReborn();
+
+	Ship* getShip();
+	void scoreCounter(float dt);
 	
 	//ship moving according to the touch moving
 	virtual bool ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);  
@@ -71,14 +76,8 @@ private:
 
 	 //add the player
 	Ship* m_ship;
-	//bullet
-	Bullet* m_bullet;
-	//enemy
-	Enemy* m_enemy;
-
-	CCSprite* shipIcon1;
-	CCSprite* shipIcon2;
-	CCSprite* shipIcon3;
+	int m_time;
+	CCRect m_screenRect;
 
 	 
 	cocos2d::CCPoint mTouchPos;   //initial position
@@ -87,6 +86,7 @@ private:
 	//int Score;   //game score
 	CCLabelTTF *m_scoreLabel;  //score label
 	CCLabelTTF *m_lifeCountLabel;  //life count label
+	EnemyActionMag* m_EnemyActionMag;
 
 };
 

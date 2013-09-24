@@ -48,25 +48,26 @@ bool GameOverLayer::init()
 		this->_label=CCLabelTTF::create("","FZCuYuan-M03",40);
 		_label->retain();
 		_label->setColor(ccc3(200,200,200));
-		_label->setPosition(ccp(winSize.width/2,winSize.height/2));
+		_label->setPosition(ccp(winSize.width/2,winSize.height/2-50));
 		this->addChild(_label);
-		
+
+		highScoreLabel=CCLabelTTF::create("","FZCuYuan-M03",40);
+		highScoreLabel->setColor(ccc3(200,200,200));
+		highScoreLabel->setPosition(ccp(winSize.width/2,winSize.height/2+40));
+		this->addChild(highScoreLabel);
+
+
+	
 		CCLabelTTF* gameoverlabel=CCLabelTTF::create("Game Over","Aharoni",40);
 		gameoverlabel->setColor(ccc3(150,150,150));
-		gameoverlabel->setPosition(ccp(winSize.width/2,winSize.height/2+50));
+		gameoverlabel->setPosition(ccp(winSize.width/2,winSize.height/2));
 		this->addChild(gameoverlabel);
 		//add your score label
 		CCLabelTTF*  scoreLabel=CCLabelTTF::create("Your score is: ","FZCuYuan-M03",20);
 		//scoreLabel->setAnchorPoint(ccp(0,0));
 		scoreLabel->setColor(ccc3(150,150,150));
-		scoreLabel->setPosition(ccp(winSize.width/2,winSize.height/2+30));
+		scoreLabel->setPosition(ccp(winSize.width/2,winSize.height/2-20));
 		this->addChild(scoreLabel);
-
-		//add confirm label
-		CCLabelTTF* pLabel=CCLabelTTF::create("Please press 'confirm' to play again!","Aharoni",20);
-		pLabel->setPosition(ccp(winSize.width/2,winSize.height/2-30));
-		pLabel->setColor(ccc3(150,150,150));
-		this->addChild(pLabel);
 
 		//****************************************add "play again" button
 
