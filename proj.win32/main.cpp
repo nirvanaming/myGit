@@ -25,7 +25,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     // create the application instance
     AppDelegate app;
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
-	eglView->setViewName("Junior_Shoot_V0.9");
+	eglView->setViewName("Junior_Shoot_V0.91");
     eglView->setFrameSize(480, 320);
 	//eglView->setFrameZoomFactor(2.0f);
 	//eglView->setMenuResource;

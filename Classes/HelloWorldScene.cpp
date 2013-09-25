@@ -194,7 +194,7 @@ void HelloWorld::isCollide()
 			{
 				m_allBigBulletArray->removeObject(bullet);
 				bullet->removeFromParent();
-				//bullet->destroy();
+				
 			}
 		}
 		if(collide(enemy,m_ship))

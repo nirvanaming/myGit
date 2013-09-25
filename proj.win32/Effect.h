@@ -19,6 +19,7 @@ public:
 	//explode
 	void explode(CCNode *parent, CCPoint pos);
 	void killSprite(CCNode *sender);
+	void hit(CCNode* parent, CCPoint pos);
 	static Effect* create();
 
 };

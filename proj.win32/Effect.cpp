@@ -62,3 +62,21 @@ void Effect::killSprite(CCNode *sender)
 {
 	sender->removeFromParent();
 }
+
+
+void Effect::hit(CCNode* parent, CCPoint pos)
+{
+	
+	CCSprite* hit=CCSprite::create("hit.jpg");
+	ccBlendFunc cb={GL_SRC_ALPHA,GL_ONE};
+	hit->setBlendFunc(cb);
+	hit->setPosition(pos);
+	hit->setRotation(CCRANDOM_0_1()*360);
+	hit->setScale(0.6);
+	parent->addChild(hit,100);
+
+	CCCallFuncN* removeHit=CCCallFuncN::create(hit,callfuncN_selector(Effect::killSprite));
+	hit->runAction(CCScaleBy::create(0.3,2,2));
+	hit->runAction(CCSequence::create(CCFadeOut::create(0.3),removeHit,NULL));
+	
+}

@@ -6,6 +6,7 @@
 
 #include "BigBullet.h"
 #include "Config.h"
+#include "Effect.h"
 
 
 BigBullet::BigBullet(void)
@@ -65,6 +66,7 @@ BigBullet* BigBullet::create(const char* weapon,int speed)
 
 void BigBullet::update(float dt)
 {
+	
 	CCPoint position=this->getPosition();
 	if(moveSpeed>0){
 	position.x+=this->moveSpeed*dt;
@@ -72,22 +74,7 @@ void BigBullet::update(float dt)
 	else
 		position.x-=-(this->moveSpeed)*dt;
 	this->setPosition(ccp(position.x,position.y));
-
-	if(moveSpeed<=0)
-	{
-		if(position.x<0)
-		{
-			this->destroy();
-		}
-	}
-	else
-	{
-		if(position.x>=480)
-		{
-			this->destroy();
-		}
-	}
-
+	
 	if(this->m_HP<=0)
 	{
 		this->m_active=false;
@@ -107,15 +94,18 @@ CCRect BigBullet::Rect()
 void BigBullet::hurt()
 {
 	 m_HP--;
-	 
 }
 
 
 void BigBullet::destroy()
 {
+	Effect* hitEffect=Effect::create();
+	hitEffect->hit(getParent(),this->getPosition());
+
 	m_allBigBulletArray->removeObject(this);
 	m_allEnemyBulletArray->removeObject(this);
 	this->removeFromParent();
+
 }
 
 

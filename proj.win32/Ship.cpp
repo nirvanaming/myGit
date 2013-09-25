@@ -52,7 +52,7 @@ bool Ship::initWithFile(const char* pic)
 		CCAnimation* animation=CCAnimation::createWithSpriteFrames(animFrames,0.1f);
 		CCAnimate* animate=CCAnimate::create(animation);
 		this->runAction(CCRepeatForever::create(animate));
-		this->schedule(schedule_selector(Ship::shoot),0.1f);
+		this->schedule(schedule_selector(Ship::shoot),0.15f);
 
 		//revive ship
 		CCSprite* ghost=CCSprite::createWithTexture(pTexture,CCRectMake(0,0,60,45));
@@ -68,27 +68,6 @@ bool Ship::initWithFile(const char* pic)
 		CCCallFuncN* makeBeAttack=CCCallFuncN::create(this,callfuncN_selector(Ship::makeAttack));
 		this->runAction(CCSequence::create(CCDelayTime::create(0.5),blink,makeBeAttack,NULL));
 
-	/*
-		CCSprite* sShip=CCSprite::create("Player.png",CCRectMake(47*2,0,47,56));
-		this->addChild(sShip,0,747);
-		/////////create animation//////////////////////////////////
-		CCAnimation* animation=CCAnimation::create();
-		animation->setDelayPerUnit(0.1f);
-		//define every frame of animation
-		for(unsigned int i=0;i<4;i++)
-		{
-			animation->addSpriteFrame(
-				CCSpriteFrame::create("Player.png",CCRectMake(47*i,0,47,56)));
-
-		}
-		//create animation
-		CCAnimate* anim=CCAnimate::create(animation);
-		sShip->runAction(::cocos2d::CCRepeatForever::create(anim));
-		sShip->setPosition(ccp(50,160));
-		sShip->setRotation(90);
-
-		this->schedule(schedule_selector(Ship::shoot),0.3f);
-		*/
 		sRet=true;
 	}while(0);
 	return sRet;
