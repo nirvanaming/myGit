@@ -6,12 +6,14 @@
 #include "HudLayer.h"
 #include "Defines.h"
 #include "Hero.h"
+#include "Config.h"
 
 
 HudLayer::HudLayer(void)
 {
 	_dpad=NULL;
 	_rdpad=NULL;
+	_scoreLabel=NULL;
 }
 
 
@@ -27,6 +29,7 @@ bool HudLayer::init()
 		CC_BREAK_IF(!CCLayer::init());
 
 		this->initDpad();
+		this->initScoreLabel();
 		this->scheduleUpdate();
 
 		bRet=true;
@@ -51,6 +54,13 @@ void HudLayer::initDpad()
 		this->addChild(_rdpad);
 }
 
+
+void HudLayer::update(float dt)
+{
+	this->updateScoreLabel();
+}
+
+
 void HudLayer::draw()
 {
 	CCLayer::draw();
@@ -63,3 +73,23 @@ void HudLayer::draw()
 }
 
 
+void HudLayer::initScoreLabel()
+{
+	_scoreLabel=CCLabelAtlas::create("1:","set1_player_hud3.png",14,21,'0');
+	this->addChild(_scoreLabel);
+	char score1[50];
+	sprintf(score1,"%d",Config::sharedConfig()->getScore());
+	_scoreLabel->setPosition(ccp(SCREEN.width-50,SCREEN.height-25));
+	_scoreLabel->setString(score1);
+}
+
+
+void HudLayer::updateScoreLabel()
+{
+	char score[50];
+	sprintf(score, "%d", Config::sharedConfig()->getScore());
+	//int a=Config::sharedConfig()->getScore();
+	//itoa(Config::sharedConfig()->getScore(),score,10);
+	_scoreLabel->setString(score);
+	//CCLog("%d",a);
+}

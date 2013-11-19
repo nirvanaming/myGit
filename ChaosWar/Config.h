@@ -5,7 +5,7 @@
 //
 #pragma once
 #include <vector>
-#include <string>
+//#include <string>
 #include "cocos2d.h"
 using namespace std;
 USING_NS_CC;
@@ -15,41 +15,36 @@ extern CCArray *_allEnemyArray;
 extern CCArray *_allShipBulletArray;
 
 
-
-typedef struct Enemies
+struct EnemyInfo
 {
-	string showType;
+	//string showType;
 	int showTime;
-	int types[3];
-	Enemies()
-	{
-		showType="Repeate";
-		showTime=0;
-		types[0]=0;
-		types[1]=0;
-		types[2]=0;
-	}
-}EnemyInfo;
+    int types[3];
+	
+};
 
 
-typedef struct{
+struct EnemyType{
+public:
+
 	int type;
-	string textureName;
-	string bulletType;
+	char* textureName;
+	char* bulletType;
 	int hp;
 	int moveType;
 	int scoreValue;
-}EnemyType;
+
+};
+
 
 
 class Config: public CCObject
 {
 
 
-
 public:
-	Config(void);
-	~Config(void);
+	
+	~Config();
 
 	int getScore();
 	void setScore(int score);
@@ -61,11 +56,24 @@ public:
 	vector<EnemyInfo> getEnemies();
 	vector<EnemyType> getEnemyType();
 
-
 private:
+	Config();
+	static Config* g_config;
 	vector<EnemyInfo> _enemies;
 	vector<EnemyType> _enemyTypes;
 	int _score; 
 
+	//////////////////////
+	class CCGarbo
+	{
+	public:
+		~CCGarbo()
+		{
+			if(g_config)
+				delete g_config;
+		}
+
+	};
+	static CCGarbo Garbo;
 };
 

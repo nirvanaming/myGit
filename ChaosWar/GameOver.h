@@ -17,6 +17,8 @@ public:
 	virtual bool init();
 	static CCScene* createScene();
 
+	void restartGame(CCObject* pSender);
+
 	CREATE_FUNC(GameOver);
 };
 

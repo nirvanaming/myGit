@@ -42,7 +42,8 @@ bool Enemys::initWithFile(EnemyType type)
 		_moveType=type.moveType;
 		_scoreValue=type.scoreValue;
 
-		this->initWithSpriteFrameName(type.textureName.c_str());
+		//this->initWithSpriteFrameName(type.textureName.c_str());
+		this->initWithSpriteFrameName(type.textureName);
    
     sRet=true;
 	}while(0);

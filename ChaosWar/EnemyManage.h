@@ -24,11 +24,12 @@ public:
 	EnemyManage(CCLayer* gameLayer);
 	~EnemyManage();
 
+
 	void loadResource(int dt);
 	void addEnemyToGameLayer(int type);
 	void repeatAction(CCNode* pSender);
-	void followHero(CCNode* pSender);
-	void update(float dt);
+	//void followHero(CCNode* pSender);
+	//void update(float dt);
 
 	
 };

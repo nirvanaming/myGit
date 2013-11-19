@@ -50,6 +50,8 @@ public:
 	int getHP();
 	int getMaxHP();
 
+	void resetHero();
+
 private:
 	int _HP;
 	int _maxHP;

@@ -19,11 +19,17 @@ public:
 
 	CREATE_FUNC(HudLayer);
 	bool init();
+	void initDpad();
+	void initScoreLabel();
 	CC_SYNTHESIZE(DPad*,_dpad,DPAD);
 	CC_SYNTHESIZE(RightDPad*,_rdpad,RDPAD);
-	void initDpad();
 
+	void update(float dt);
 	virtual void draw();
+	void updateScoreLabel();
+
+private:
+	CCLabelAtlas* _scoreLabel;
 
 };
 

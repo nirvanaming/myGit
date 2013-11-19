@@ -294,3 +294,10 @@ Hero* Hero::sharedHero()
 
 	return g_hero;
 }
+
+
+void Hero::resetHero()
+{
+//	Hero::sharedHero()->removeFromParent();
+
+}

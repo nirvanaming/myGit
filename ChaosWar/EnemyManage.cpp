@@ -27,16 +27,17 @@ void EnemyManage::loadResource(int dt)
 {
 	for(vector<EnemyInfo>::iterator iter=_enemies.begin();iter!=_enemies.end();++iter)
 	{
-		if(iter->showType=="Repeate")
-		{
+		//if(iter->showType=="Repeate")
+		//{
 			if(dt%iter->showTime==0)
 			{
 				for(int i=0;i!=3;++i)
 				{
-				addEnemyToGameLayer(iter->types[i]);
+				    addEnemyToGameLayer(iter->types[i]);
+					//addEnemyToGameLayer(iter->pTypes[i]);
 				}
 			}
-		}
+		//}
 	}
 }
 
@@ -93,7 +94,7 @@ void EnemyManage::addEnemyToGameLayer(int type)
 
 	case 1:      //随意出生，跟踪_hero
 		enemy->setPosition(ccp(MAPWIDTH*CCRANDOM_0_1(),MAPHEIGHT*CCRANDOM_0_1()));
-		if(Hero::sharedHero())
+		if(Hero::sharedHero()->isActive())
 		{
 			offset=Hero::sharedHero()->getPosition();
 		}
@@ -116,7 +117,7 @@ void EnemyManage::addEnemyToGameLayer(int type)
 
 	case 3:       //随意书生，根据_hero运动而随意运动（moveBy）
 		enemy->setPosition(ccp(MAPWIDTH*CCRANDOM_0_1(),MAPHEIGHT*CCRANDOM_0_1()));
-		if(Hero::sharedHero())
+		if(Hero::sharedHero()->isActive())
 		{
 			offset=Hero::sharedHero()->getPosition();
 		}
@@ -144,14 +145,8 @@ void EnemyManage::repeatAction(CCNode* pSender)
 }
 
 
-void EnemyManage::followHero(CCNode* pSender)
-{
-	
-}
+//void EnemyManage::followHero(CCNode* pSender){}
 
 
 
-void EnemyManage::update(float dt)
-{
-
-}
+//void EnemyManage::update(float dt){}

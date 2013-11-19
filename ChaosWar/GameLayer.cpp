@@ -16,6 +16,7 @@ GameLayer::GameLayer(void)
 	_enemyManage=NULL;
 	_MapRect=CCRectMake(0,0,MAPWIDTH,MAPHEIGHT);
 	_motionStreak=NULL;
+	_time=0;
 }
 
 
@@ -46,13 +47,13 @@ bool GameLayer::init()
 		this->initArray();
 		this->initBg();
 		this->initHero();
-		//this->initEnemy();
+		this->initEnemy();
 		this->initMotionStreak();
 		if(Hero::sharedHero()->isActive())
 		{
 		this->scheduleUpdate();
 		}
-		//schedule(schedule_selector(GameLayer::loadEnemy), 1.0f);
+		schedule(schedule_selector(GameLayer::loadEnemy), 1.0f);
 
 
 		bRet=true;

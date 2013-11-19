@@ -10,13 +10,18 @@ CCArray *_allEnemyArray;
 CCArray *_allShipBulletArray;
 //CCArray *_allEnemyBulletArray;
 
-static  Config *g_config = NULL;
 
-Config::Config(void):_score(0)
+
+Config* Config::g_config=NULL;
+
+Config::Config()
 {
+	_score=0;
+
 	EnemyInfo temp;
-	temp.showType="Repeate";
-	temp.showTime=2;
+	//temp.showType="Repeate";
+	temp.showTime=1;;
+	temp.types[0]=0;
 	temp.types[1]=1;
 	temp.types[2]=2;
 	_enemies.push_back(temp);
@@ -75,27 +80,36 @@ Config::Config(void):_score(0)
 	enemyType.moveType=2;
 	enemyType.scoreValue=180;
 	_enemyTypes.push_back(enemyType);
-
 }
 
 
 
 
-Config::~Config(void)
+Config::~Config()
 {
 	_allEnemyArray->release();
 	_allEnemyArray=NULL;
-	/*_allEnemyBulletArray->release();
-	_allEnemyBulletArray=NULL;*/
+
 	_allShipBulletArray->release();
 	_allShipBulletArray=NULL;
-
-	delete g_config;
-	g_config=NULL;
+	
 }
 
 
-
+//bool Config::init()
+//{
+//	bool bRet=false;
+//	do
+//	{
+//	
+//	_score=0;
+//
+//	
+//
+//	bRet=true;
+//	}while(0);
+//	return bRet;
+//}
 
 int Config::getScore()
 {
@@ -118,8 +132,10 @@ CCUserDefault *highScore=CCUserDefault::sharedUserDefault();
 
 Config* Config::sharedConfig()
 {
+
 	if(!g_config)
 	{
+		//g_config=Config::create();
 		g_config=new Config();
 	}
 	return g_config;
